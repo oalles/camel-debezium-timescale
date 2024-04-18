@@ -48,6 +48,8 @@ camel:
         "[offset.storage.jdbc.user]": ${application.db.user}
         "[offset.storage.jdbc.password]": ${application.db.password}
         "[offset.storage.jdbc.offset.table-name]": debezium_offsets
+        "[offset.storage.jdbc.offset.table.ddl]": "CREATE TABLE %1$s (id VARCHAR(36) NOT NULL,offset_key VARCHAR(1255), offset_val VARCHAR(1255),record_insert_ts TIMESTAMP NOT NULL,record_insert_seq INTEGER NOT NULL);ALTER TABLE %1$s ADD PRIMARY KEY (id);"
+
 
 logging:
   level:
