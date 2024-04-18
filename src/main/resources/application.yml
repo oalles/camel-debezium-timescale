@@ -38,8 +38,7 @@ camel:
       database-password: ${application.db.password}
       #      offset-commit-policy: io.debezium.embedded.spi.OffsetCommitPolicy$PeriodicCommitOffsetPolicy
       offset-storage: io.debezium.storage.jdbc.offset.JdbcOffsetBackingStore
-      schema-include-list: public
-      table-include-list: public.sample_entity
+      schema-include-list: _timescaledb_internal
       include-unknown-datatypes: true
       bridge-error-handler: true
       topic-prefix: cdc
@@ -49,7 +48,13 @@ camel:
         "[offset.storage.jdbc.password]": ${application.db.password}
         "[offset.storage.jdbc.offset.table-name]": debezium_offsets
         "[offset.storage.jdbc.offset.table.ddl]": "CREATE TABLE %1$s (id VARCHAR(36) NOT NULL,offset_key VARCHAR(1255), offset_val VARCHAR(1255),record_insert_ts TIMESTAMP NOT NULL,record_insert_seq INTEGER NOT NULL);ALTER TABLE %1$s ADD PRIMARY KEY (id);"
-
+        "[transforms]": timescaledb
+        "[transforms.timescaledb.type]": io.debezium.connector.postgresql.transforms.timescaledb.TimescaleDb
+        "[transforms.timescaledb.database.dbname]": ${application.db.database}
+        "[transforms.timescaledb.database.hostname]": ${application.db.hostname}
+        "[transforms.timescaledb.database.port]": ${application.db.port}
+        "[transforms.timescaledb.database.user]": ${application.db.user}
+        "[transforms.timescaledb.database.password]": ${application.db.password}
 
 logging:
   level:

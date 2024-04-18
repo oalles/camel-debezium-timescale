@@ -21,9 +21,13 @@ public class DatabaseInitializer {
     private final String CREATE_REPLICATION_SLOT =
             "SELECT * FROM pg_create_logical_replication_slot('debezium','pgoutput');";
 
+    private final String CREATE_HYPERTABLE =
+            "SELECT create_hypertable('sample_entity', by_range('ts', INTERVAL '7 days'), if_not_exists => TRUE)";
+
     @PostConstruct
     public void initialize() throws Exception {
         createReplicationSlotIfNeeded();
+        createHypertablesIfNeeded();
     }
 
     private void createReplicationSlotIfNeeded() throws Exception {
@@ -37,6 +41,10 @@ public class DatabaseInitializer {
                 throw e;
             }
         }
+    }
+
+    private void createHypertablesIfNeeded() throws Exception {
+        executeQuery(dataSource.getConnection(), CREATE_HYPERTABLE);
     }
 
     private void executeQuery(Connection conn, String query) throws Exception {
