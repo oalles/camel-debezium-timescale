@@ -1,0 +1,54 @@
+server:
+  port: 8080
+
+application:
+  name: camel-debezium-timescale
+  db:
+    hostname: ${POSTGRES_HOSTNAME:localhost}
+    port: ${APPLICATION_DB_URL:5432}
+    database: ${APPLICATION_DB_NAME:postgres}
+    user: ${APPLICATION_DB_USERNAME:postgres}
+    password: ${APPLICATION_DB_PASSWORD:postgres}
+    url: jdbc:postgresql://${application.db.hostname}:${application.db.port}/${application.db.database}
+
+spring:
+  application:
+    name: ${application.name}
+  datasource:
+    driverClassName: ${SPRING_DRIVER_CLASS_NAME:org.postgresql.Driver}
+    url: ${application.db.url}
+    username: ${application.db.user}
+    password: ${application.db.password}
+    hikari:
+      maximumPoolSize: ${SPRING_DATASOURCE_MAXIMUM_POOL_SIZE:16}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+
+camel:
+  component:
+    debezium-postgres:
+      enabled: true
+      plugin-name: pgoutput
+      database-dbname: ${application.db.database}
+      database-hostname: ${application.db.hostname}
+      database-port: ${application.db.port}
+      database-user: ${application.db.user}
+      database-password: ${application.db.password}
+      #      offset-commit-policy: io.debezium.embedded.spi.OffsetCommitPolicy$PeriodicCommitOffsetPolicy
+      offset-storage: org.apache.kafka.connect.storage.MemoryOffsetBackingStore
+      schema-include-list: public
+      table-include-list: public.sample_entity
+      include-unknown-datatypes: true
+      bridge-error-handler: true
+      topic-prefix: cdc
+
+logging:
+  level:
+    es.omarall: DEBUG
+    org.apache.camel: INFO
+    #    org.springframework.data: DEBUG
+    #    org.hibernate: DEBUG
+    #    org.postgresql: DEBUG
+    #    io.debezium: DEBUG
