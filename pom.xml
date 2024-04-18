@@ -16,9 +16,15 @@
     <properties>
         <java.version>17</java.version>
         <camel.version>4.5.0</camel.version>
+        <debezium-storage-jdbc.version>2.5.3.Final</debezium-storage-jdbc.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>io.debezium</groupId>
+            <artifactId>debezium-storage-jdbc</artifactId>
+            <version>${debezium-storage-jdbc.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.apache.camel.springboot</groupId>
             <artifactId>camel-debezium-postgres-starter</artifactId>

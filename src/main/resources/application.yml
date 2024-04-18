@@ -37,12 +37,17 @@ camel:
       database-user: ${application.db.user}
       database-password: ${application.db.password}
       #      offset-commit-policy: io.debezium.embedded.spi.OffsetCommitPolicy$PeriodicCommitOffsetPolicy
-      offset-storage: org.apache.kafka.connect.storage.MemoryOffsetBackingStore
+      offset-storage: io.debezium.storage.jdbc.offset.JdbcOffsetBackingStore
       schema-include-list: public
       table-include-list: public.sample_entity
       include-unknown-datatypes: true
       bridge-error-handler: true
       topic-prefix: cdc
+      additional-properties:
+        "[offset.storage.jdbc.url]": ${application.db.url}
+        "[offset.storage.jdbc.user]": ${application.db.user}
+        "[offset.storage.jdbc.password]": ${application.db.password}
+        "[offset.storage.jdbc.offset.table-name]": debezium_offsets
 
 logging:
   level:
